@@ -36,6 +36,8 @@ import (
 )
 
 func main() {
+	// relative paths are nice, but can get confusing quickly
+	// TODO accept input file at cmdline
 	file, err := os.Open("./wordlist")
 	defer file.Close()
 	if err != nil {
@@ -66,7 +68,7 @@ func main() {
 	}
 
 	// Yay range! Can also use _, word if you don't need the index
-	for idx, word := range words {
+	for _, word := range words {
 
 		var in_order bool = true
 
@@ -75,7 +77,7 @@ func main() {
 		var current rune
 
 		// Reusing the same variable in an enclosing scope does NOT confuse the compiler :)
-		for idx, letter := range word {
+		for _, letter := range word {
 			if letter < current {
 
 				// NOTE had in_order := false here, which CREATES A NEW VAR
@@ -86,9 +88,11 @@ func main() {
 
 			// NOTE had current := letter here, which CREATES A NEW VAR
 			current = letter
-			fmt.Println(idx, letter)
 		}
-		fmt.Println(idx, "=>", word, "\n")
-		fmt.Println(word, in_order)
+		if in_order {
+			fmt.Println(word, "IN ORDER")
+		} else {
+			fmt.Println(word, "NOT IN ORDER")
+		}
 	}
 }
