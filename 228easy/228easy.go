@@ -76,12 +76,12 @@ func main() {
 	for _, word := range words {
 		if in_order(word) {
 			fmt.Println(word, "IN ORDER")
-		} else if in_reverse_order(word) {
-			fmt.Println(word, "IN REVERSE ORDER")
+		} else if reverse_order(word) {
+			fmt.Println(word, "REVERSE ORDER")
 		} else {
 			fmt.Println(word, "NOT IN ORDER")
 		}
-	fmt.Println()
+//	fmt.Println()
 	}
 }
 
@@ -89,8 +89,7 @@ func in_order(word string) bool {
 	var in_order bool = true
 	var current rune
 	for _, letter := range word {
-		fmt.Println("(check in_order)", letter, string(letter))
-		if letter <= current {
+		if letter < current {
 			in_order = false
 			break
 		}
@@ -99,16 +98,15 @@ func in_order(word string) bool {
 	return in_order
 }
 
-func in_reverse_order(word string) bool {
-	var in_reverse_order bool = true
+func reverse_order(word string) bool {
+	var reverse_order bool = true
 	var current rune = 'z'
 	for _, letter := range word {
-		fmt.Println("(check in_reverse_order)", letter, string(letter))
-		if letter >= current {
-			in_reverse_order = false
+		if letter > current {
+			reverse_order = false
 			break
 		}
 		current = letter
 	}
-	return in_reverse_order
+	return reverse_order
 }
