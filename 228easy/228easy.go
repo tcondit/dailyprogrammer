@@ -38,7 +38,7 @@ import (
 func main() {
 	// relative paths are nice, but can get confusing quickly
 	// TODO accept input file at cmdline
-	file, err := os.Open("./wordlist")
+	file, err := os.Open("./challenge-input")
 	defer file.Close()
 	if err != nil {
 		log.Fatal(err)
@@ -61,38 +61,54 @@ func main() {
 		- for each word in slice
 			- read each byte and get its ASCII value
 			- if each byte >= the one before, IN ORDER
-			- else NOT IN ORDER
+			- else NOT IN ORDER but maybe IN REVERSE ORDER
+			
+			- if NOT IN ORDER but maybe IN REVERSE ORDER
+				- read each byte and get its ASCII value
+				- if each byte <= the one before, IN ORDER
+				- else NOT IN ORDER
 	*/
 	for scanner.Scan() {
 		words = append(words, scanner.Text())
 	}
 
-	// Yay range! Can also use _, word if you don't need the index
+	// Yay range!
 	for _, word := range words {
-
-		var in_order bool = true
-
-		// NOTE changed type int -> string -> rune, just trying different things
-		// TODO learn about rune types
-		var current rune
-
-		// Reusing the same variable in an enclosing scope does NOT confuse the compiler :)
-		for _, letter := range word {
-			if letter < current {
-
-				// NOTE had in_order := false here, which CREATES A NEW VAR
-				// Thankfully the compiler insisted I do something about it
-				in_order = false
-				break
-			}
-
-			// NOTE had current := letter here, which CREATES A NEW VAR
-			current = letter
-		}
-		if in_order {
+		if in_order(word) {
 			fmt.Println(word, "IN ORDER")
+		} else if in_reverse_order(word) {
+			fmt.Println(word, "IN REVERSE ORDER")
 		} else {
 			fmt.Println(word, "NOT IN ORDER")
 		}
+	fmt.Println()
 	}
+}
+
+func in_order(word string) bool {
+	var in_order bool = true
+	var current rune
+	for _, letter := range word {
+		fmt.Println("(check in_order)", letter, string(letter))
+		if letter <= current {
+			in_order = false
+			break
+		}
+		current = letter
+	}
+	return in_order
+}
+
+func in_reverse_order(word string) bool {
+	var in_reverse_order bool = true
+	var current rune = 'z'
+	for _, letter := range word {
+		fmt.Println("(check in_reverse_order)", letter, string(letter))
+		if letter >= current {
+			in_reverse_order = false
+			break
+		}
+		current = letter
+	}
+	return in_reverse_order
 }
